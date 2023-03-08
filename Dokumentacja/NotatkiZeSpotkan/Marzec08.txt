@@ -1,0 +1,18 @@
+8. marca
+
+? OPTO: Topologia światłowodu
+? OPTO: router vs switch
+? MAIN: Doprecyzować wymagania software na PC
+
+? R. Skwirus -> dr inż. Łakomski - Jak zaprojektować sieć ethernet dla światłowodu przemysłowego? Switch światłowodowy? 12 gniazd minimum
+
+^ PCB splitterów CAN+485 -> M. Mierzejek
+
+! Napisać do dyrektora CTI
+
+* Nie ekranujemy wiązki
+* Splittery CAN+485 zabezpieczane diodą
+* Moduły podsieci złożone na wspólnej PCB,
+  wtedy można kupować same układy
+  i elementy pasywne. Mniejszy koszt, lepszy montaż
+* Przejściówka gniazdo-gniazdo dla OPTO przy przyłączu dla zabezpieczenia przed zerwaniem
