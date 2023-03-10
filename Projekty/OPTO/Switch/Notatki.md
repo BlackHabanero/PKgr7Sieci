@@ -1,0 +1,2 @@
+* Dioda LED może działać zarówno do emisji światła jak i jako fotodioda do wykrywania światła
+* Mikrokontroler w roli przełącznika ethernet mógłby wyciągnąć kilka Mbps (Można zastosować jakiś szybki ARM)
