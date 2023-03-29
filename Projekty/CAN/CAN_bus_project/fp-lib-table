@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "ELEMENTY_FB")(type "KiCad")(uri "${KIPRJMOD}/ELEMENTY_FB.pretty")(options "")(descr ""))
+)
