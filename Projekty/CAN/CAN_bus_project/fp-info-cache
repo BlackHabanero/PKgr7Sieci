@@ -1,4 +1,25 @@
-21567713872896522
+21572757321442737
+1_WLASNA_Library
+2PAD_WIRE
+http://www.susumu-usa.com/pdf/Foot_Print_38.pdf, https://www.susumu.co.jp/common/pdf/n_catalog_partition16_en.pdf
+2mm 1.2mm
+0
+2
+2
+1_WLASNA_Library
+3PAD_WIRE_SWITCH
+http://www.susumu-usa.com/pdf/Foot_Print_38.pdf, https://www.susumu.co.jp/common/pdf/n_catalog_partition16_en.pdf
+2mm 1.2mm
+0
+3
+3
+1_WLASNA_Library
+4Pin_COMMON_MODE_CHOKE_B82787C0104H002
+API Delevan, Surface Mount Common Mode Bead, 4222 4222R, http://www.delevan.com/seriesPDFs/4222.pdf
+surface mount common mode bead
+0
+4
+4
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
