@@ -5281,8 +5281,8 @@
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "2" (uuid 13ed5fcc-544a-4da4-a4d6-f910a9524274))
-    (pin "3" (uuid 9071560c-7e5e-4989-a3a2-b0e5bd369ce4))
-    (pin "3" (uuid 9071560c-7e5e-4989-a3a2-b0e5bd369ce4))
+    (pin "3" (uuid 9071560c-7e5e-4989-a3a2-b0e5bd369ce6))
+    (pin "3" (uuid 9071560c-7e5e-4989-a3a2-b0e5bd369ce6))
     (instances
       (project "PrzylaczePCB"
         (path "/45db4533-aa6e-4785-aef0-204976ca4e66"
