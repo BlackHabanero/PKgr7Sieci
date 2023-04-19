@@ -2,4 +2,5 @@
   (version 7)
   (lib (name "PrzylaczeFootprintLibrary")(type "KiCad")(uri "${KIPRJMOD}/PrzylaczeFootprintLibrary.pretty")(options "")(descr ""))
   (lib (name "1_WLASNA_Library")(type "KiCad")(uri "D:/Documents/Politechnika/ProjektKompetencyjny/Projekty/CAN/CAN_bus_project/1_WLASNA_Library.pretty")(options "")(descr ""))
+  (lib (name "11111111111111Library")(type "KiCad")(uri "${KIPRJMOD}/11111111111111Library.pretty")(options "")(descr ""))
 )
