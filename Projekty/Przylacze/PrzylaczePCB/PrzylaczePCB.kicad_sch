@@ -4597,7 +4597,7 @@
       (effects (font (size 1.27 1.27)) (justify left) hide)
     )
   )
-  (global_label "OPTO_R1" (shape input) (at 264.16 107.95 0) (fields_autoplaced)
+  (global_label "OPTO_R2" (shape input) (at 264.16 107.95 0) (fields_autoplaced)
     (effects (font (size 0.9906 0.9906)) (justify left))
     (uuid 1c7440aa-f92f-42af-9321-496df2d397c1)
     (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 272.936 107.95 0)
@@ -4898,7 +4898,7 @@
       (effects (font (size 1.27 1.27)) (justify left) hide)
     )
   )
-  (global_label "OPTO_R1" (shape input) (at 100.33 87.63 180) (fields_autoplaced)
+  (global_label "OPTO_R2" (shape input) (at 100.33 87.63 180) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid d3b5f489-2ecf-4cf6-bd6b-4c5335b61233)
     (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 89.0785 87.63 0)
@@ -5270,8 +5270,8 @@
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "2" (uuid 13ed5fcc-544a-4da4-a4d6-f910a9524274))
-    (pin "3" (uuid 9071560c-7e5e-4989-a3a2-b0e5bd369ce7))
-    (pin "3" (uuid 9071560c-7e5e-4989-a3a2-b0e5bd369ce7))
+    (pin "3" (uuid 9071560c-7e5e-4989-a3a2-b0e5bd369cef))
+    (pin "3" (uuid 9071560c-7e5e-4989-a3a2-b0e5bd369cef))
     (instances
       (project "PrzylaczePCB"
         (path "/45db4533-aa6e-4785-aef0-204976ca4e66"
@@ -5753,7 +5753,7 @@
     (property "Value" "ATSAM4S2AA-AU" (at 154.94 33.02 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Microchip_Technology-ATSAM4S2AA-AU-*" (at 115.57 27.94 0)
+    (property "Footprint" "Package_QFP:LQFP-48_7x7mm_P0.5mm" (at 115.57 27.94 0)
       (effects (font (size 1.27 1.27)) (justify left) hide)
     )
     (property "Datasheet" "https://www.mouser.com/datasheet/2/268/Atmel_11100_32_bit_Cortex_M4_Microcontroller_SAM4S-1146601.pdf" (at 115.57 25.4 0)
