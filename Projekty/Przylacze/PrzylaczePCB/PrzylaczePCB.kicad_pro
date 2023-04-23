@@ -56,7 +56,18 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "lib_footprint_mismatch|59004250|148416499|188de214-1a6f-4b8b-bed3-18facf00f0b4|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|59128700|171856399|9e55914b-0dcc-44d8-a01b-c1b08f10c5ed|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|59950000|173689499|9e55914b-0dcc-44d8-a01b-c1b08f10c5ed|00000000-0000-0000-0000-000000000000",
+        "unconnected_items|128746000|188679000|4445969f-d338-4b83-9428-e3cc14d8b8c7|56221c13-5df3-4f28-98b9-3b5f0ee6a59e",
+        "unconnected_items|46566000|99370000|541f8e79-ba28-4c80-a7c1-dae0e13f0d2a|5aa9f781-ec79-486e-84d4-592bd13a9ae2",
+        "unconnected_items|50686000|118529979|2cea9df2-48ba-43fb-9f19-477ed7e8b414|db4ab97d-361e-4bb4-806c-04eab38c4ebe",
+        "unconnected_items|50686000|125029979|9fe9cd08-193b-4162-bb94-df9c55f5d723|2cea9df2-48ba-43fb-9f19-477ed7e8b414",
+        "unconnected_items|50686000|125029979|9fe9cd08-193b-4162-bb94-df9c55f5d723|2d391128-57ed-4f3d-a05f-525ecb26ddf9",
+        "unconnected_items|50686000|125029979|db4ab97d-361e-4bb4-806c-04eab38c4ebe|2cea9df2-48ba-43fb-9f19-477ed7e8b414",
+        "unconnected_items|55186000|118529979|8f0b3a8d-edd3-4b1e-a553-cf45131cb461|c5d7b8ef-643f-4fce-9d27-4c1a4debd902"
+      ],
       "meta": {
         "version": 2
       },
@@ -70,8 +81,8 @@
         "diff_pair_gap_out_of_range": "error",
         "diff_pair_uncoupled_length_too_long": "error",
         "drill_out_of_range": "error",
-        "duplicate_footprints": "warning",
-        "extra_footprint": "warning",
+        "duplicate_footprints": "ignore",
+        "extra_footprint": "ignore",
         "footprint": "error",
         "footprint_type_mismatch": "error",
         "hole_clearance": "error",
@@ -92,7 +103,7 @@
         "padstack": "error",
         "pth_inside_courtyard": "ignore",
         "shorting_items": "error",
-        "silk_edge_clearance": "warning",
+        "silk_edge_clearance": "ignore",
         "silk_over_copper": "warning",
         "silk_overlap": "warning",
         "skew_out_of_range": "error",
@@ -184,6 +195,10 @@
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 1.2,
+          "drill": 0.6
         }
       ],
       "zones_allow_external_fillets": false,
