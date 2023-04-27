@@ -34,9 +34,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.0,
-          "height": 0.8,
-          "width": 0.55
+          "drill": 1.5,
+          "height": 3.0,
+          "width": 3.0
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -46,7 +46,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.508
+          "min_clearance": 0.0
         }
       },
       "diff_pair_dimensions": [
@@ -57,16 +57,9 @@
         }
       ],
       "drc_exclusions": [
-        "lib_footprint_mismatch|59004250|148416499|188de214-1a6f-4b8b-bed3-18facf00f0b4|00000000-0000-0000-0000-000000000000",
-        "lib_footprint_mismatch|59128700|171856399|9e55914b-0dcc-44d8-a01b-c1b08f10c5ed|00000000-0000-0000-0000-000000000000",
-        "lib_footprint_mismatch|59950000|173689499|9e55914b-0dcc-44d8-a01b-c1b08f10c5ed|00000000-0000-0000-0000-000000000000",
-        "unconnected_items|128746000|188679000|4445969f-d338-4b83-9428-e3cc14d8b8c7|56221c13-5df3-4f28-98b9-3b5f0ee6a59e",
         "unconnected_items|46566000|99370000|541f8e79-ba28-4c80-a7c1-dae0e13f0d2a|5aa9f781-ec79-486e-84d4-592bd13a9ae2",
-        "unconnected_items|50686000|118529979|2cea9df2-48ba-43fb-9f19-477ed7e8b414|db4ab97d-361e-4bb4-806c-04eab38c4ebe",
-        "unconnected_items|50686000|125029979|9fe9cd08-193b-4162-bb94-df9c55f5d723|2cea9df2-48ba-43fb-9f19-477ed7e8b414",
         "unconnected_items|50686000|125029979|9fe9cd08-193b-4162-bb94-df9c55f5d723|2d391128-57ed-4f3d-a05f-525ecb26ddf9",
-        "unconnected_items|50686000|125029979|db4ab97d-361e-4bb4-806c-04eab38c4ebe|2cea9df2-48ba-43fb-9f19-477ed7e8b414",
-        "unconnected_items|55186000|118529979|8f0b3a8d-edd3-4b1e-a553-cf45131cb461|c5d7b8ef-643f-4fce-9d27-4c1a4debd902"
+        "unconnected_items|51990000|115960000|8f0b3a8d-edd3-4b1e-a553-cf45131cb461|cfae0ca8-c4e5-43b3-8890-319dad69b12a"
       ],
       "meta": {
         "version": 2
@@ -93,7 +86,7 @@
         "items_not_allowed": "error",
         "length_out_of_range": "error",
         "lib_footprint_issues": "warning",
-        "lib_footprint_mismatch": "warning",
+        "lib_footprint_mismatch": "ignore",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
         "missing_courtyard": "ignore",
