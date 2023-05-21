@@ -1,0 +1,22 @@
+{
+  "files.associations": {
+    "main.h": "c",
+    "stm32l4xx_hal.h": "c",
+    "stm32l4xx_hal_conf.h": "c",
+    "stm32l4xx_hal_rcc.h": "c",
+    "stm32l4xx_hal_def.h": "c",
+    "stddef.h": "c",
+    "stm32l4xx.h": "c",
+    "stdint.h": "c",
+    "stdint-gcc.h": "c"
+  },
+  "makefile.launchConfigurations": [
+    {
+      "cwd": "d:\\Documents\\Politechnika\\ProjektKompetencyjny\\Projekty\\CAN\\Oprogramowanie\\CANSTM_PK\\build",
+      "binaryPath": "d:\\Documents\\Politechnika\\ProjektKompetencyjny\\Projekty\\CAN\\Oprogramowanie\\CANSTM_PK\\build\\CANSTM_PK.elf",
+      "binaryArgs": []
+    }
+  ],
+  "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
+  "C_Cpp.default.compilerPath": "c:\\Program Files (x86)\\GNU Arm Embedded Toolchain\\10 2021.10\\bin\\arm-none-eabi-gcc.exe"
+}
