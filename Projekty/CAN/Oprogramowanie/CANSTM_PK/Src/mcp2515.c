@@ -29,24 +29,21 @@
  */
 
 /**
- * @brief Initializes Microchip MCP2515 CAN controller.
- * @param hmcp2515 MCP2515 handle.
- * @retval bool - whether error occured during SPI transmission.
- */
-HAL_StatusTypeDef MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515) {
-  return 0;
-}
-
-/**
  * @brief Configures RXnBF and TXnRTS pins of MCP2515 CAN controller.
  * @param hmcp2515 MCP2515 handle.
  * @param rxbf_pins Use MCP2515_RXBn_Pin enum to specify.
- * @param txrts_pins Use MCP2515_TXBn_Pin enum to specify
+ * @param txrts_pins Use MCP2515_TXBn_Pin enum to specify.
+ * @attention Only available when device is in configuration mode
  * @retval bool - whether error occured during SPI transmission.
  */
 HAL_StatusTypeDef MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
                                     uint8_t rxbf_pins,
                                     uint8_t txrts_pins) {
+  uint8_t is_config_mode;
+  MCP2515_IsInConfigurationMode(hmcp2515, &is_config_mode);
+  if (!is_config_mode)
+    return 4;
+
   uint8_t pData[4] = {MCP2515_WRITE, MCP2515_BFPCTRL, (rxbf_pins & 15),
                       (txrts_pins & 7)};
 
@@ -61,9 +58,15 @@ HAL_StatusTypeDef MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
 /// @brief Reads receive error count register from MCP2515 CAN controller.
 /// @param hmcp2515 MCP2515 handle.
 /// @param interrupts use MCP2515_Interrupt enum to specify.
+/// @attention Only available when device is in configuration mode
 /// @return SPI status.
 HAL_StatusTypeDef MCP2515_EnableInterrupts(MCP2515_HandleTypeDef* hmcp2515,
                                            uint8_t interrupts) {
+  uint8_t is_config_mode;
+  MCP2515_IsInConfigurationMode(hmcp2515, &is_config_mode);
+  if (!is_config_mode)
+    return 4;
+
   uint8_t pData[3] = {MCP2515_WRITE, MCP2515_CANINTE, interrupts};
 
   HAL_GPIO_WritePin(hmcp2515->cs_base, hmcp2515->cs_pin, GPIO_PIN_RESET);
@@ -172,12 +175,18 @@ void MCP2515_ConvertFrameID(uint8_t* out, uint32_t in) {
  * @param frametype type of CAN frame (standard 11b/extended 29b).
  * @param filter acceptance filter selector.
  * @param filterbits filter.
+ * @attention Only available when device is in configuration mode.
  * @return SPI status.
  */
 HAL_StatusTypeDef MCP2515_SetRXFilter(MCP2515_HandleTypeDef* hmcp2515,
                                       MCP2515_CAN_FrameType frametype,
                                       MCP2515_AcceptanceFilter filter,
                                       uint32_t filterbits) {
+  uint8_t is_config_mode;
+  MCP2515_IsInConfigurationMode(hmcp2515, &is_config_mode);
+  if (!is_config_mode)
+    return 4;
+
   uint8_t filter_regs[4];
   MCP2515_ConvertFrameID(filter_regs, filterbits);
   filter_regs[1] |=
@@ -198,11 +207,17 @@ HAL_StatusTypeDef MCP2515_SetRXFilter(MCP2515_HandleTypeDef* hmcp2515,
  * @param hmcp2515 MCP2515 handle.
  * @param mask mask selector.
  * @param maskbits filter mask.
+ * @attention Only available when device is in configuration mode.
  * @return SPI status.
  */
 HAL_StatusTypeDef MCP2515_SetRXMask(MCP2515_HandleTypeDef* hmcp2515,
                                     MCP2515_RX_Mask mask,
                                     uint32_t maskbits) {
+  uint8_t is_config_mode;
+  MCP2515_IsInConfigurationMode(hmcp2515, &is_config_mode);
+  if (!is_config_mode)
+    return 4;
+
   uint8_t mask_regs[4];
   MCP2515_ConvertFrameID(mask_regs, maskbits);
 
@@ -224,6 +239,7 @@ HAL_StatusTypeDef MCP2515_SetRXMask(MCP2515_HandleTypeDef* hmcp2515,
 /// @param PRSEG Propagation Segment register.
 /// @param PHSEG1 Phase Segment 1 register.
 /// @param PHSEG2 Phase Segment 2 register.
+/// @attention Only available when device is in configuration mode.
 /// @return SPI status.
 HAL_StatusTypeDef MCP2515_SetTimeSegments(MCP2515_HandleTypeDef* hmcp2515,
                                           uint8_t BRP,
@@ -231,6 +247,11 @@ HAL_StatusTypeDef MCP2515_SetTimeSegments(MCP2515_HandleTypeDef* hmcp2515,
                                           uint8_t PRSEG,
                                           uint8_t PHSEG1,
                                           uint8_t PHSEG2) {
+  uint8_t is_config_mode;
+  MCP2515_IsInConfigurationMode(hmcp2515, &is_config_mode);
+  if (!is_config_mode)
+    return 4;
+
   uint8_t cnf3;
 
   HAL_StatusTypeDef status = MCP2515_GetRegister(hmcp2515, MCP2515_CNF3, &cnf3);
@@ -306,12 +327,38 @@ HAL_StatusTypeDef MCP2515_GetReceiveBuffer(MCP2515_HandleTypeDef* hmcp2515,
     return status;
 
   *frame_id = ((receivd[1] >> 5) & 7) | (((uint16_t)receivd[0]) << 3) |
-             (((uint32_t)(receivd[1] & 3) << 27)) |
-             (((uint32_t)receivd[2]) << 19) | (((uint32_t)receivd[3]) << 11);
-  *frametype = receivd[1] & (1<<3);
+              (((uint32_t)(receivd[1] & 3) << 27)) |
+              (((uint32_t)receivd[2]) << 19) | (((uint32_t)receivd[3]) << 11);
+  *frametype = receivd[1] & (1 << 3);
   *datasize = receivd[4] & 15;
-  for(uint8_t i = 8; i--; i) {
+  for (uint8_t i = 8; i--; i) {
     data[i] = receivd[i + 5];
   }
+  return status;
+}
+
+HAL_StatusTypeDef MCP2515_ChangeOperationMode(MCP2515_HandleTypeDef* hmcp2515,
+                                              MCP2515_OperationMode mode) {
+  uint8_t pData[4] = {MCP2515_BIT_MODIFY, MCP2515_CANCTRL, 0b11100000,
+                      (mode & 7) << 5};
+  HAL_GPIO_WritePin(hmcp2515->cs_base, hmcp2515->cs_pin, GPIO_PIN_RESET);
+  HAL_StatusTypeDef status =
+      HAL_SPI_Transmit(hmcp2515->hspi, pData, 4, HAL_MAX_DELAY);
+  HAL_GPIO_WritePin(hmcp2515->cs_base, hmcp2515->cs_pin, GPIO_PIN_SET);
+  return status;
+}
+
+HAL_StatusTypeDef MCP2515_IsInConfigurationMode(MCP2515_HandleTypeDef* hmcp2515,
+                                                uint8_t* is_config_mode) {
+  uint8_t canstat;
+
+  HAL_StatusTypeDef status =
+      MCP2515_GetRegister(hmcp2515, MCP2515_CANSTAT, &canstat);
+
+  if (((canstat >> 5) == MCP2515_CONFIGURATION_MODE))
+    is_config_mode = 1;
+  else
+    is_config_mode = 0;
+
   return status;
 }

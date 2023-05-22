@@ -87,14 +87,34 @@ typedef enum {
   MCP2515_MERR = (uint8_t)(1 << 7)
 } MCP2515_Interrupt;
 
+typedef enum {
+  MCP2515_NORMAL_MODE = (uint8_t)0,
+  MCP2515_SLEEP_MODE = (uint8_t)1,
+  MCP2515_LOOPBACK_MODE = (uint8_t)2,
+  MCP2515_LISTENONLY_MODE = (uint8_t)3,
+  MCP2515_CONFIGURATION_MODE = (uint8_t)4
+} MCP2515_OperationMode;
+
+typedef enum {
+  MCP2515_EWARN = (uint8_t)(1 << 0),
+  MCP2515_RXWAR = (uint8_t)(1 << 1),
+  MCP2515_TXWAR = (uint8_t)(1 << 2),
+  MCP2515_RXEP = (uint8_t)(1 << 3),
+  MCP2515_TXEP = (uint8_t)(1 << 4),
+  MCP2515_TXBO = (uint8_t)(1 << 5),
+  MCP2515_RX0OVR = (uint8_t)(1 << 6),
+  MCP2515_RX1OVR = (uint8_t)(1 << 7)
+} MCP2515_ErrorFlag;
+
 typedef struct {
   uint16_t cs_pin;
   GPIO_TypeDef* cs_base;
   SPI_HandleTypeDef* hspi;
 } MCP2515_HandleTypeDef;
 
-HAL_StatusTypeDef MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515);
+// HAL_StatusTypeDef MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515);
 
+// TODO add CLKOUT config to _PinConfig(...)
 HAL_StatusTypeDef MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
                                     uint8_t rxbf_pins,
                                     uint8_t txrts_pins);
@@ -153,4 +173,11 @@ HAL_StatusTypeDef MCP2515_GetReceiveBuffer(MCP2515_HandleTypeDef* hmcp2515,
                                            uint8_t* data,
                                            uint8_t* datasize);
 
+HAL_StatusTypeDef MCP2515_ChangeOperationMode(MCP2515_HandleTypeDef* hmcp2515,
+                                              MCP2515_OperationMode mode);
+
+HAL_StatusTypeDef MCP2515_IsInConfigurationMode(MCP2515_HandleTypeDef* hmcp2515, uint8_t* is_config_mode);
+
+// TODO WakeUp filter
+// TODO (TX/RX)CTRL regs
 #endif /* __MCP2515_H */
