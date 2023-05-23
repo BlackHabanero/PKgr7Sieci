@@ -3,6 +3,8 @@
 
 #include "stm32l4xx_hal.h"
 
+#define MCP2515_NOT_IN_CONFIGMODE 4
+
 typedef enum {
   MCP2515_RESET = (uint8_t)0b11000000,
   MCP2515_READ = (uint8_t)0b00000011,
@@ -66,7 +68,7 @@ typedef enum {
 } MCP2515_TXBn_Pin;
 
 typedef enum {
-  MCP2515_TXB0 = (uint8_t)(0),
+  MCP2515_TXB0 = (uint8_t)(1),
   MCP2515_TXB1 = (uint8_t)(2),
   MCP2515_TXB2 = (uint8_t)(4)
 } MCP2515_TXBn;
@@ -106,18 +108,51 @@ typedef enum {
   MCP2515_RX1OVR = (uint8_t)(1 << 7)
 } MCP2515_ErrorFlag;
 
+typedef enum {
+  MCP2515_WAKFIL = (uint8_t)(1 << 0),
+  MCP2515_SAM = (uint8_t)(1 << 1)
+} MCP2515_InitFlag;
+
+typedef enum {
+  MCP2515_CLKPRE0 = (uint8_t)(1 << 0),
+  MCP2515_CLKPRE1 = (uint8_t)(1 << 1),
+  MCP2515_CLKEN = (uint8_t)(1 << 2),
+  MCP2515_SOF = (uint8_t)(1 << 7)
+} MCP2515_CLKOUTFlag;
+
+typedef enum {
+  MCP2515_LOWEST_PRIORITY = (uint8_t)0,
+  MCP2515_LOWINTER_PRIORITY = (uint8_t)1,
+  MCP2515_HIGHINTER_PRIORITY = (uint8_t)2,
+  MCP2515_HIGHEST_PRIORITY = (uint8_t)3
+} MCP2515_TXB_Priority;
+
+typedef enum {
+  MCP2515_TXP0 = (uint8_t)(1 << 0),
+  MCP2515_TXP1 = (uint8_t)(1 << 1),
+  // unimplemented in device
+  MCP2515_TXREQ = (uint8_t)(1 << 3),
+  MCP2515_TXERR = (uint8_t)(1 << 4),
+  MCP2515_MLOA = (uint8_t)(1 << 5),
+  MCP2515_ABTF = (uint8_t)(1 << 6),
+  // unimplemented in device
+} MCP2515_TXB_Status;
+
 typedef struct {
   uint16_t cs_pin;
   GPIO_TypeDef* cs_base;
   SPI_HandleTypeDef* hspi;
 } MCP2515_HandleTypeDef;
 
-// HAL_StatusTypeDef MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515);
+uint8_t MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515,
+                     uint8_t rxbf_pins,
+                     uint8_t txrts_pins,
+                     uint8_t init_flags,
+                     uint8_t clkout_flags);
 
-// TODO add CLKOUT config to _PinConfig(...)
-HAL_StatusTypeDef MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
-                                    uint8_t rxbf_pins,
-                                    uint8_t txrts_pins);
+uint8_t MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
+                          uint8_t rxbf_pins,
+                          uint8_t txrts_pins);
 
 void MCP2515_ConvertFrameID(uint8_t* out, uint32_t in);
 
@@ -176,8 +211,33 @@ HAL_StatusTypeDef MCP2515_GetReceiveBuffer(MCP2515_HandleTypeDef* hmcp2515,
 HAL_StatusTypeDef MCP2515_ChangeOperationMode(MCP2515_HandleTypeDef* hmcp2515,
                                               MCP2515_OperationMode mode);
 
-HAL_StatusTypeDef MCP2515_IsInConfigurationMode(MCP2515_HandleTypeDef* hmcp2515, uint8_t* is_config_mode);
+HAL_StatusTypeDef MCP2515_IsInConfigurationMode(MCP2515_HandleTypeDef* hmcp2515,
+                                                uint8_t* is_config_mode);
 
-// TODO WakeUp filter
-// TODO (TX/RX)CTRL regs
+static HAL_StatusTypeDef MCP2515_AbortAllPendingTransmissions(
+    MCP2515_HandleTypeDef* hmcp2515,
+    uint8_t abat);
+HAL_StatusTypeDef MCP2515_RequestAbortAllPendingTransmissions(
+    MCP2515_HandleTypeDef* hmcp2515);
+HAL_StatusTypeDef MCP2515_TerminateAbortAllPendingTransmissions(
+    MCP2515_HandleTypeDef* hmcp2515);
+
+static HAL_StatusTypeDef MCP2515_OneShotMode(MCP2515_HandleTypeDef* hmcp2515,
+                                             uint8_t osm);
+HAL_StatusTypeDef MCP2515_EnableOneShotMode(MCP2515_HandleTypeDef* hmcp2515);
+HAL_StatusTypeDef MCP2515_DisableOneShotMode(MCP2515_HandleTypeDef* hmcp2515);
+
+// TODO TBI
+HAL_StatusTypeDef MCP2515_SetTransmitBufferPriority(
+    MCP2515_HandleTypeDef* hmcp2515,
+    MCP2515_TXB_Priority priority);
+
+// TODO TBI
+HAL_StatusTypeDef MCP2515_RequestToSend(MCP2515_HandleTypeDef* hmcp2515,
+                                        uint8_t txbs);
+
+// TODO TBI
+HAL_StatusTypeDef MCP2515_GetTXB_Status(MCP2515_HandleTypeDef* hmcp2515,
+                                        MCP2515_TXBn txbn);
+
 #endif /* __MCP2515_H */
