@@ -28,6 +28,19 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+static HAL_StatusTypeDef MCP2515_AbortAllPendingTransmissions(
+    MCP2515_HandleTypeDef* hmcp2515,
+    uint8_t abat);
+
+static uint8_t MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
+                                 uint8_t rxbf_pins,
+                                 uint8_t txrts_pins);
+
+static void MCP2515_ConvertFrameID(uint8_t* out, uint32_t in);
+
+static HAL_StatusTypeDef MCP2515_OneShotMode(MCP2515_HandleTypeDef* hmcp2515,
+                                             uint8_t osm);
+
 // TODO improve existing and add missing doxygen comments
 
 uint8_t MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515,
@@ -48,7 +61,9 @@ uint8_t MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515,
   if (status)
     return status;
 
-  uint8_t pData[4] = {MCP2515_BIT_MODIFY, MCP2515_CANCTRL, 7, clkout_flags};
+  pData[1] = MCP2515_CANCTRL;
+  pData[2] = 7;
+  pData[3] = clkout_flags;
   HAL_GPIO_WritePin(hmcp2515->cs_base, hmcp2515->cs_pin, GPIO_PIN_RESET);
   status = HAL_SPI_Transmit(hmcp2515->hspi, pData, 4, HAL_MAX_DELAY);
   HAL_GPIO_WritePin(hmcp2515->cs_base, hmcp2515->cs_pin, GPIO_PIN_SET);
@@ -59,15 +74,15 @@ uint8_t MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515,
 /**
  * @brief Configures RXnBF and TXnRTS pins of MCP2515 CAN controller.
  * @param hmcp2515 MCP2515 handle.
- * @param rxbf_pins Use MCP2515_RXBn_Pin enum to specify.
- * @param txrts_pins Use MCP2515_TXBn_Pin enum to specify.
+ * @param rxbf_pins Use MCP2515_RXBn enum to specify.
+ * @param txrts_pins Use MCP2515_TXBn enum to specify.
  * @attention Only available when device is in configuration mode
  * @return HAL_StatusTypeDef or MCP2515_NOT_IN_CONFIGMODE when device not in
  * configuration mode.
  */
-uint8_t MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
-                          uint8_t rxbf_pins,
-                          uint8_t txrts_pins) {
+static uint8_t MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
+                                 uint8_t rxbf_pins,
+                                 uint8_t txrts_pins) {
   uint8_t is_config_mode;
   HAL_StatusTypeDef status =
       MCP2515_IsInConfigurationMode(hmcp2515, &is_config_mode);
@@ -75,6 +90,12 @@ uint8_t MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
     return status;
   if (!is_config_mode)
     return MCP2515_NOT_IN_CONFIGMODE;
+
+  uint8_t rxbf;
+  if (rxbf_pins & MCP2515_RXB0)
+    rxbf |= 0b0101;
+  if (rxbf_pins & MCP2515_RXB1)
+    rxbf |= 0b1010;
 
   uint8_t pData[4] = {MCP2515_WRITE, MCP2515_BFPCTRL, (rxbf_pins & 15),
                       (txrts_pins & 7)};
@@ -189,7 +210,7 @@ HAL_StatusTypeDef MCP2515_GetRegister(MCP2515_HandleTypeDef* hmcp2515,
  * @param[in] in CAN Frame in continuous format (29b or 11b)
  * @warning ensure out is 4 elements wide!
  */
-void MCP2515_ConvertFrameID(uint8_t* out, uint32_t in) {
+static void MCP2515_ConvertFrameID(uint8_t* out, uint32_t in) {
   uint8_t sidh = (in >> 3) & 255;  // higher 8b of std frame
   uint8_t sidl = (in & 7) << 5;    // lower 3b of std frame
 
@@ -355,7 +376,7 @@ HAL_StatusTypeDef MCP2515_GetReceiveBuffer(MCP2515_HandleTypeDef* hmcp2515,
                                            uint32_t* frame_id,
                                            uint8_t* data,
                                            uint8_t* datasize) {
-  uint8_t pData = MCP2515_READ_RX_BUF | (rxbn & 3);
+  uint8_t pData = MCP2515_READ_RX_BUF | ((rxbn & 2) << 1);
   HAL_GPIO_WritePin(hmcp2515->cs_base, hmcp2515->cs_pin, GPIO_PIN_RESET);
   HAL_StatusTypeDef status =
       HAL_SPI_Transmit(hmcp2515->hspi, &pData, 1, HAL_MAX_DELAY);
@@ -380,7 +401,7 @@ HAL_StatusTypeDef MCP2515_GetReceiveBuffer(MCP2515_HandleTypeDef* hmcp2515,
   return status;
 }
 
-HAL_StatusTypeDef MCP2515_ChangeOperationMode(MCP2515_HandleTypeDef* hmcp2515,
+HAL_StatusTypeDef MCP2515_SetOperationMode(MCP2515_HandleTypeDef* hmcp2515,
                                               MCP2515_OperationMode mode) {
   uint8_t pData[4] = {MCP2515_BIT_MODIFY, MCP2515_CANCTRL, 0b11100000,
                       (mode & 7) << 5};
@@ -393,15 +414,23 @@ HAL_StatusTypeDef MCP2515_ChangeOperationMode(MCP2515_HandleTypeDef* hmcp2515,
 
 HAL_StatusTypeDef MCP2515_IsInConfigurationMode(MCP2515_HandleTypeDef* hmcp2515,
                                                 uint8_t* is_config_mode) {
+  uint8_t mode;
+
+  HAL_StatusTypeDef status =
+      MCP2515_GetOperationMode(hmcp2515, &mode);
+
+  *is_config_mode = !!(mode & MCP2515_CONFIGURATION_MODE);
+
+  return status;
+}
+
+HAL_StatusTypeDef MCP2515_GetOperationMode(MCP2515_HandleTypeDef* hmcp2515,
+                                              MCP2515_OperationMode* mode) {
   uint8_t canstat;
 
   HAL_StatusTypeDef status =
       MCP2515_GetRegister(hmcp2515, MCP2515_CANSTAT, &canstat);
-
-  if (((canstat >> 5) == MCP2515_CONFIGURATION_MODE))
-    is_config_mode = 1;
-  else
-    is_config_mode = 0;
+  *mode = (canstat >> 5);
 
   return status;
 }
@@ -445,4 +474,35 @@ HAL_StatusTypeDef MCP2515_EnableOneShotMode(MCP2515_HandleTypeDef* hmcp2515) {
 
 HAL_StatusTypeDef MCP2515_DisableOneShotMode(MCP2515_HandleTypeDef* hmcp2515) {
   return MCP2515_OneShotMode(hmcp2515, 0);
+}
+
+HAL_StatusTypeDef MCP2515_SetTransmitBufferPriority(
+    MCP2515_HandleTypeDef* hmcp2515,
+    MCP2515_TXBn txbn,
+    MCP2515_TXB_Priority priority) {
+  uint8_t address = MCP2515_TXB0CTRL + ((txbn & 0b110) << 3);
+  uint8_t pData[4] = {MCP2515_BIT_MODIFY, address, 3, priority};
+  HAL_GPIO_WritePin(hmcp2515->cs_base, hmcp2515->cs_pin, GPIO_PIN_RESET);
+  HAL_StatusTypeDef status =
+      HAL_SPI_Transmit(hmcp2515->hspi, pData, 4, HAL_MAX_DELAY);
+  HAL_GPIO_WritePin(hmcp2515->cs_base, hmcp2515->cs_pin, GPIO_PIN_SET);
+  return status;
+}
+
+HAL_StatusTypeDef MCP2515_RequestToSend(MCP2515_HandleTypeDef* hmcp2515,
+                                        uint8_t txbs) {
+  uint8_t pData = MCP2515_RTS | (txbs & 7);
+  HAL_GPIO_WritePin(hmcp2515->cs_base, hmcp2515->cs_pin, GPIO_PIN_RESET);
+  HAL_StatusTypeDef status =
+      HAL_SPI_Transmit(hmcp2515->hspi, &pData, 1, HAL_MAX_DELAY);
+  HAL_GPIO_WritePin(hmcp2515->cs_base, hmcp2515->cs_pin, GPIO_PIN_SET);
+  return status;
+}
+
+HAL_StatusTypeDef MCP2515_GetTXB_Status(MCP2515_HandleTypeDef* hmcp2515,
+                                        MCP2515_TXBn txbn,
+                                        uint8_t* status) {
+  uint8_t address = MCP2515_TXB0CTRL + ((txbn & 0b110) << 3);
+  HAL_StatusTypeDef stat = MCP2515_GetRegister(hmcp2515, address, status);
+  return stat;
 }

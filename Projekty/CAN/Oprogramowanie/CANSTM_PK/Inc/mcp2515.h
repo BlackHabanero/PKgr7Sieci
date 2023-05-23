@@ -57,24 +57,13 @@ typedef enum {
 } MCP2515_CAN_FrameType;
 
 typedef enum {
-  MCP2515_RX0BF = (uint8_t)0b0101,
-  MCP2515_RX1BF = (uint8_t)0b1010
-} MCP2515_RXBn_Pin;
-
-typedef enum {
-  MCP2515_TX0RTS = (uint8_t)(1 << 0),
-  MCP2515_TX1RTS = (uint8_t)(1 << 1),
-  MCP2515_TX2RTS = (uint8_t)(1 << 2)
-} MCP2515_TXBn_Pin;
-
-typedef enum {
   MCP2515_TXB0 = (uint8_t)(1),
   MCP2515_TXB1 = (uint8_t)(2),
   MCP2515_TXB2 = (uint8_t)(4)
 } MCP2515_TXBn;
 
 typedef enum {
-  MCP2515_RXB0 = (uint8_t)(0),
+  MCP2515_RXB0 = (uint8_t)(1),
   MCP2515_RXB1 = (uint8_t)(2)
 } MCP2515_RXBn;
 
@@ -130,13 +119,22 @@ typedef enum {
 typedef enum {
   MCP2515_TXP0 = (uint8_t)(1 << 0),
   MCP2515_TXP1 = (uint8_t)(1 << 1),
-  // unimplemented in device
   MCP2515_TXREQ = (uint8_t)(1 << 3),
   MCP2515_TXERR = (uint8_t)(1 << 4),
   MCP2515_MLOA = (uint8_t)(1 << 5),
-  MCP2515_ABTF = (uint8_t)(1 << 6),
-  // unimplemented in device
+  MCP2515_ABTF = (uint8_t)(1 << 6)
 } MCP2515_TXB_Status;
+
+typedef enum {
+  MCP2515_FILHIT0 = (uint8_t)(1 << 0),
+  MCP2515_FILHIT1 = (uint8_t)(1 << 1),  // RXB1 only
+  MCP2515_BUKT1 = (uint8_t)(1 << 1),    // RXB0 only
+  MCP2515_FILHIT2 = (uint8_t)(1 << 2),  // RXB1 only
+  MCP2515_BUKT = (uint8_t)(1 << 2),     // RXB0 only
+  MCP2515_RXRTR = (uint8_t)(1 << 3),
+  MCP2515_RXM0 = (uint8_t)(1 << 5),
+  MCP2515_RXM1 = (uint8_t)(1 << 6)
+} MCP2515_RXB_Status;
 
 typedef struct {
   uint16_t cs_pin;
@@ -150,11 +148,11 @@ uint8_t MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515,
                      uint8_t init_flags,
                      uint8_t clkout_flags);
 
-uint8_t MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
-                          uint8_t rxbf_pins,
-                          uint8_t txrts_pins);
+// static uint8_t MCP2515_PinConfig(MCP2515_HandleTypeDef* hmcp2515,
+//                           uint8_t rxbf_pins,
+//                           uint8_t txrts_pins);
 
-void MCP2515_ConvertFrameID(uint8_t* out, uint32_t in);
+// static void MCP2515_ConvertFrameID(uint8_t* out, uint32_t in);
 
 HAL_StatusTypeDef MCP2515_SetRXFilter(MCP2515_HandleTypeDef* hmcp2515,
                                       MCP2515_CAN_FrameType frametype,
@@ -214,30 +212,44 @@ HAL_StatusTypeDef MCP2515_ChangeOperationMode(MCP2515_HandleTypeDef* hmcp2515,
 HAL_StatusTypeDef MCP2515_IsInConfigurationMode(MCP2515_HandleTypeDef* hmcp2515,
                                                 uint8_t* is_config_mode);
 
-static HAL_StatusTypeDef MCP2515_AbortAllPendingTransmissions(
-    MCP2515_HandleTypeDef* hmcp2515,
-    uint8_t abat);
+// static HAL_StatusTypeDef MCP2515_AbortAllPendingTransmissions(
+//     MCP2515_HandleTypeDef* hmcp2515,
+//     uint8_t abat);
 HAL_StatusTypeDef MCP2515_RequestAbortAllPendingTransmissions(
     MCP2515_HandleTypeDef* hmcp2515);
 HAL_StatusTypeDef MCP2515_TerminateAbortAllPendingTransmissions(
     MCP2515_HandleTypeDef* hmcp2515);
 
-static HAL_StatusTypeDef MCP2515_OneShotMode(MCP2515_HandleTypeDef* hmcp2515,
-                                             uint8_t osm);
+// static HAL_StatusTypeDef MCP2515_OneShotMode(MCP2515_HandleTypeDef* hmcp2515,
+//                                              uint8_t osm);
 HAL_StatusTypeDef MCP2515_EnableOneShotMode(MCP2515_HandleTypeDef* hmcp2515);
 HAL_StatusTypeDef MCP2515_DisableOneShotMode(MCP2515_HandleTypeDef* hmcp2515);
 
-// TODO TBI
 HAL_StatusTypeDef MCP2515_SetTransmitBufferPriority(
     MCP2515_HandleTypeDef* hmcp2515,
+    MCP2515_TXBn txbn,
     MCP2515_TXB_Priority priority);
 
-// TODO TBI
 HAL_StatusTypeDef MCP2515_RequestToSend(MCP2515_HandleTypeDef* hmcp2515,
                                         uint8_t txbs);
 
-// TODO TBI
 HAL_StatusTypeDef MCP2515_GetTXB_Status(MCP2515_HandleTypeDef* hmcp2515,
-                                        MCP2515_TXBn txbn);
+                                        MCP2515_TXBn txbn,
+                                        uint8_t* status);
 
+// TODO TBI
+HAL_StatusTypeDef MCP2515_EnableReceiveFilter(MCP2515_HandleTypeDef* hmcp2515,
+                                              MCP2515_RXBn rxbn);
+
+// TODO TBI
+HAL_StatusTypeDef MCP2515_DisableReceiveFilter(MCP2515_HandleTypeDef* hmcp2515,
+                                               MCP2515_RXBn rxbn);
+
+// TODO TBI
+HAL_StatusTypeDef MCP2515_EnableRollover(MCP2515_HandleTypeDef* hmcp2515);
+
+// TODO TBI
+HAL_StatusTypeDef MCP2515_GetRXB_Status(MCP2515_HandleTypeDef* hmcp2515,
+                                        MCP2515_RXBn rxbn,
+                                        uint8_t* status);
 #endif /* __MCP2515_H */
