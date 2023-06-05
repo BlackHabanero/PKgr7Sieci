@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "STM32L4: Upload firmware",
+      "command": "D:\\Workspace\\Programs\\xpack-openocd-0.11.0-5\\bin\\openocd.exe",
+      "args": [
+        "-f",
+        "D:\\Workspace\\Programs\\xpack-openocd-0.11.0-5\\scripts\\board\\st_nucleo_l4.cfg",
+        "-c",
+        "program ./build/CANSTM_PK.elf verify reset exit"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "STM32L4: Start OpenOCD",
+      "command": "D:\\Workspace\\Programs\\xpack-openocd-0.11.0-5\\bin\\openocd.exe",
+      "args": [
+        "-f",
+        "D:\\Workspace\\Programs\\xpack-openocd-0.11.0-5\\scripts\\interface\\stlink.cfg",
+        "-f",
+        "D:\\Workspace\\Programs\\xpack-openocd-0.11.0-5\\scripts\\target\\stm32l4x.cfg"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "STM32L4: Debug",
+      "command": "C:\\Program Files (x86)\\GNU Arm Embedded Toolchain\\10 2021.10\\bin\\arm-none-eabi-gdb.exe",
+      "args": [
+        "-ex=target extended-remote localhost:3333",
+        ".\\build\\CANSTM_PK.elf"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

@@ -137,9 +137,9 @@ typedef enum {
 } MCP2515_RXB_Status;
 
 typedef struct {
-  uint16_t cs_pin;
-  GPIO_TypeDef* cs_base;
   SPI_HandleTypeDef* hspi;
+  GPIO_TypeDef* cs_base;
+  uint16_t cs_pin;
 } MCP2515_HandleTypeDef;
 
 uint8_t MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515,
@@ -154,12 +154,12 @@ uint8_t MCP2515_Init(MCP2515_HandleTypeDef* hmcp2515,
 
 // static void MCP2515_ConvertFrameID(uint8_t* out, uint32_t in);
 
-HAL_StatusTypeDef MCP2515_SetRXFilter(MCP2515_HandleTypeDef* hmcp2515,
+HAL_StatusTypeDef MCP2515_SetReceiveFilter(MCP2515_HandleTypeDef* hmcp2515,
                                       MCP2515_CAN_FrameType frametype,
                                       MCP2515_AcceptanceFilter filter,
                                       uint32_t filterbits);
 
-HAL_StatusTypeDef MCP2515_SetRXMask(MCP2515_HandleTypeDef* hmcp2515,
+HAL_StatusTypeDef MCP2515_SetReceiveMask(MCP2515_HandleTypeDef* hmcp2515,
                                     MCP2515_RX_Mask mask,
                                     uint32_t maskbits);
 
@@ -189,6 +189,9 @@ HAL_StatusTypeDef MCP2515_GetInterruptFlags(MCP2515_HandleTypeDef* hmcp2515,
 HAL_StatusTypeDef MCP2515_ClearInterruptFlag(MCP2515_HandleTypeDef* hmcp2515,
                                              MCP2515_Interrupt interrupt);
 
+HAL_StatusTypeDef MCP2515_ClearErrorFlag(MCP2515_HandleTypeDef* hmcp2515,
+                                             MCP2515_ErrorFlag flag);
+
 HAL_StatusTypeDef MCP2515_EnableInterrupts(MCP2515_HandleTypeDef* hmcp2515,
                                            uint8_t interrupts);
 
@@ -206,8 +209,11 @@ HAL_StatusTypeDef MCP2515_GetReceiveBuffer(MCP2515_HandleTypeDef* hmcp2515,
                                            uint8_t* data,
                                            uint8_t* datasize);
 
-HAL_StatusTypeDef MCP2515_ChangeOperationMode(MCP2515_HandleTypeDef* hmcp2515,
-                                              MCP2515_OperationMode mode);
+HAL_StatusTypeDef MCP2515_SetOperationMode(MCP2515_HandleTypeDef* hmcp2515,
+                                           MCP2515_OperationMode mode);
+
+HAL_StatusTypeDef MCP2515_GetOperationMode(MCP2515_HandleTypeDef* hmcp2515,
+                                           MCP2515_OperationMode* mode);
 
 HAL_StatusTypeDef MCP2515_IsInConfigurationMode(MCP2515_HandleTypeDef* hmcp2515,
                                                 uint8_t* is_config_mode);
@@ -237,18 +243,16 @@ HAL_StatusTypeDef MCP2515_GetTXB_Status(MCP2515_HandleTypeDef* hmcp2515,
                                         MCP2515_TXBn txbn,
                                         uint8_t* status);
 
-// TODO TBI
 HAL_StatusTypeDef MCP2515_EnableReceiveFilter(MCP2515_HandleTypeDef* hmcp2515,
                                               MCP2515_RXBn rxbn);
 
-// TODO TBI
 HAL_StatusTypeDef MCP2515_DisableReceiveFilter(MCP2515_HandleTypeDef* hmcp2515,
                                                MCP2515_RXBn rxbn);
 
-// TODO TBI
 HAL_StatusTypeDef MCP2515_EnableRollover(MCP2515_HandleTypeDef* hmcp2515);
 
-// TODO TBI
+HAL_StatusTypeDef MCP2515_DisableRollover(MCP2515_HandleTypeDef* hmcp2515);
+
 HAL_StatusTypeDef MCP2515_GetRXB_Status(MCP2515_HandleTypeDef* hmcp2515,
                                         MCP2515_RXBn rxbn,
                                         uint8_t* status);
