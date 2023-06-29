@@ -34,9 +34,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.0,
-          "height": 2.0,
-          "width": 2.0
+          "drill": 0.8,
+          "height": 1.6,
+          "width": 1.6
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -58,7 +58,9 @@
       ],
       "drc_exclusions": [
         "lib_footprint_issues|51937143|89031835|94e36311-3d12-43e7-a2e6-a7ba66a19b2f|00000000-0000-0000-0000-000000000000",
-        "lib_footprint_issues|59304970|88851116|fc2eb146-2864-49b1-b4e7-2714ad82c5a5|00000000-0000-0000-0000-000000000000"
+        "lib_footprint_issues|59304970|88851116|fc2eb146-2864-49b1-b4e7-2714ad82c5a5|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_issues|70497143|104161116|94e36311-3d12-43e7-a2e6-a7ba66a19b2f|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_issues|76974970|104161116|fc2eb146-2864-49b1-b4e7-2714ad82c5a5|00000000-0000-0000-0000-000000000000"
       ],
       "meta": {
         "version": 2
@@ -117,7 +119,7 @@
         "allow_blind_buried_vias": false,
         "allow_microvias": false,
         "max_error": 0.005,
-        "min_clearance": 0.19999999999999998,
+        "min_clearance": 0.19,
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.0,
         "min_hole_clearance": 0.25,
@@ -430,7 +432,7 @@
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.2,
+        "clearance": 0.19,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
