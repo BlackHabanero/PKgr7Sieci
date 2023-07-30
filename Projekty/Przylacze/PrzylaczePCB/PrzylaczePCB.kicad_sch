@@ -6421,7 +6421,7 @@
     (property "Value" "2N3904" (at 25.4 63.5 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Package_TO_SOT_THT:TO-92_Inline" (at 29.845 55.88 0)
+    (property "Footprint" "Package_TO_SOT_THT:TO-92L" (at 29.845 55.88 0)
       (effects (font (size 1.27 1.27) italic) (justify left) hide)
     )
     (property "Datasheet" "https://www.onsemi.com/pub/Collateral/2N3903-D.PDF" (at 27.94 60.96 0)
@@ -7476,7 +7476,7 @@
     (property "Value" "2N3904" (at 25.4 34.29 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Package_TO_SOT_THT:TO-92_Inline" (at 29.845 26.67 0)
+    (property "Footprint" "Package_TO_SOT_THT:TO-92L" (at 29.845 26.67 0)
       (effects (font (size 1.27 1.27) italic) (justify left) hide)
     )
     (property "Datasheet" "https://www.onsemi.com/pub/Collateral/2N3903-D.PDF" (at 27.94 31.75 0)
@@ -7925,13 +7925,13 @@
     (pin "1" (uuid 082faee0-a71d-476f-9746-ae7560e34516))
     (pin "2" (uuid 1eaad154-b633-49a4-a936-fd353cf21b12))
     (pin "3" (uuid 5021eb1f-d359-44e1-ab9f-c6d2478af811))
-    (pin "4" (uuid 5492c4d7-77b8-4db9-9ddc-3e0620d083ac))
-    (pin "8" (uuid d90c2ea9-c042-423a-8533-dee2d6b2fb90))
-    (pin "4" (uuid 5492c4d7-77b8-4db9-9ddc-3e0620d083ac))
+    (pin "4" (uuid 5492c4d7-77b8-4db9-9ddc-3e0620d083ad))
+    (pin "8" (uuid d90c2ea9-c042-423a-8533-dee2d6b2fb91))
+    (pin "4" (uuid 5492c4d7-77b8-4db9-9ddc-3e0620d083ad))
     (pin "5" (uuid 15c7a5e7-89e8-416b-8bbc-228c5e40771a))
     (pin "6" (uuid 7298cf0a-dbb5-47c1-b727-5a19006134f6))
     (pin "7" (uuid 91848c08-882d-4ead-ad68-f0b9394d8c2e))
-    (pin "8" (uuid d90c2ea9-c042-423a-8533-dee2d6b2fb90))
+    (pin "8" (uuid d90c2ea9-c042-423a-8533-dee2d6b2fb91))
     (instances
       (project "PrzylaczePCB"
         (path "/45db4533-aa6e-4785-aef0-204976ca4e66"
@@ -8217,13 +8217,13 @@
     (pin "1" (uuid 5d99013f-ca11-4a9d-bc96-f28189735d1e))
     (pin "2" (uuid 75ed2ca8-157b-4277-b6ff-f09607f99507))
     (pin "3" (uuid 1e01b674-c4bf-40be-90ec-782c018af9f3))
-    (pin "4" (uuid b240ffaa-6118-4be3-a760-128ef6b8450f))
-    (pin "8" (uuid 9d568334-a87b-4c79-9457-b6d742856d3b))
-    (pin "4" (uuid b240ffaa-6118-4be3-a760-128ef6b8450f))
+    (pin "4" (uuid b240ffaa-6118-4be3-a760-128ef6b84510))
+    (pin "8" (uuid 9d568334-a87b-4c79-9457-b6d742856d3c))
+    (pin "4" (uuid b240ffaa-6118-4be3-a760-128ef6b84510))
     (pin "5" (uuid f56fe2f0-26d9-44b6-9ef5-7f67723f6a7a))
     (pin "6" (uuid 4df950e6-12dc-46e0-93d7-b53902c42c86))
     (pin "7" (uuid 2f1befb8-c74f-4ccf-a04f-6ce5fb6e1bda))
-    (pin "8" (uuid 9d568334-a87b-4c79-9457-b6d742856d3b))
+    (pin "8" (uuid 9d568334-a87b-4c79-9457-b6d742856d3c))
     (instances
       (project "PrzylaczePCB"
         (path "/45db4533-aa6e-4785-aef0-204976ca4e66"
@@ -8335,7 +8335,7 @@
     )
   )
 
-  (symbol (lib_id "Device:R_Potentiometer") (at 39.37 149.86 180) (unit 1)
+  (symbol (lib_id "Device:R_Potentiometer") (at 39.37 149.86 0) (mirror y) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid d4e2ee08-2e0d-49ee-b386-f74fc875a004)
     (property "Reference" "RV2" (at 33.02 146.05 0)
